@@ -1,20 +1,18 @@
 pluginManagement {
     repositories {
-        google {
-            content {
-                includeGroupByRegex("com\\.android.*")
-                includeGroupByRegex("com\\.google.*")
-                includeGroupByRegex("androidx.*")
-            }
-        }
-        mavenCentral()
-        gradlePluginPortal()
+        maven("https://artifactory.gcp.anz/artifactory/dl-google/dl/android/maven2/")
+        maven("https://artifactory.gcp.anz/artifactory/gradle-plugins/m2/")
+        maven("https://artifactory.gcp.anz/artifactory/maven-central/")
+        maven("https://artifactory.gcp.anz/artifactory/plugins-m2-gradle")
     }
 }
 dependencyResolutionManagement {
     repositories {
-        mavenCentral()
-        google()
+        maven("https://artifactory.gcp.anz/artifactory/dl-google/dl/android/maven2/")
+        maven("https://artifactory.gcp.anz/artifactory/gradle-plugins/m2/")
+        maven("https://artifactory.gcp.anz/artifactory/maven-central/")
+        maven("https://artifactory.gcp.anz/artifactory/plugins-m2-gradle")
+        maven("https://artifactory.gcp.anz/artifactory/anzx-apis-kotlin-maven-releases/")
     }
 }
 

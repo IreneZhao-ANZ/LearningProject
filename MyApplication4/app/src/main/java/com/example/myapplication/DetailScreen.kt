@@ -1,5 +1,7 @@
 package com.example.myapplication
 
+//import com.example.myapplication.navigation.DetailDestination
+//import com.example.myapplication.navigation.EditDestination
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,15 +18,31 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.myapplication.navigation.DetailDestination
+import com.example.myapplication.navigation.EditDestination
 import com.example.myapplication.ui.theme.Anzx100
+import dev.enro.annotations.NavigationDestination
+import dev.enro.core.compose.navigationHandle
+import dev.enro.core.push
+
 
 @Composable
-fun DetailScreen(targetAmount: Int, currentAmount: Int, text: String) {
+@NavigationDestination(DetailDestination::class)
+fun DetailScreen(
+    //destination: DetailDestination
+    goalName: String = "",targetAmount: Int = 0, currentAmount: Int = 0
+) {
+//    val exampleResultChannel = registerForNavigationResult<DetailDestination> { result ->
+//        val goalName = result.goalName
+//        val targetAmount = result.targetAmount
+//        val currentAmount = result.currentAmount
+//    }
+    val navigation = navigationHandle<DetailDestination>()
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -44,16 +62,16 @@ fun DetailScreen(targetAmount: Int, currentAmount: Int, text: String) {
         )
         Text(
             modifier = Modifier.padding(top = 20.dp),
-            text = "$text",
+            text = "$goalName",
             fontSize = 30.sp,
             color = Color.Gray,
-            fontWeight = androidx.compose.ui.text.font.FontWeight.Medium,
+            fontWeight = FontWeight.Medium,
             )
 
         Text(
             modifier = Modifier.padding(top = 30.dp),
             color = Color.Gray,
-            fontWeight = androidx.compose.ui.text.font.FontWeight.Medium,
+            fontWeight = FontWeight.Medium,
             text = "Target Amount: $targetAmount",
             fontSize = 25.sp
         )
@@ -62,14 +80,16 @@ fun DetailScreen(targetAmount: Int, currentAmount: Int, text: String) {
             modifier = Modifier
                 .padding(top = 20.dp),
             color = Color.Gray,
-            fontWeight = androidx.compose.ui.text.font.FontWeight.Medium,
+            fontWeight = FontWeight.Medium,
             fontSize = 25.sp
         )
 
 
         CustomButton(text = "Edit",
             modifier = Modifier.padding(top = 80.dp),
-            onClick = { /*TODO*/ })
+            onClick = {
+                navigation.push(EditDestination())
+                })
 
         CustomButton(text = "Delete",
             modifier = Modifier
@@ -109,8 +129,8 @@ fun CustomButton(text: String,
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DetailPreview() {
-    DetailScreen(100,80,"PS5")
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun DetailPreview() {
+//    //DetailScreen(100,80,"PS5")
+//}

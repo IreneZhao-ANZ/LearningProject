@@ -19,13 +19,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.myapplication.navigation.EditDestination
+import com.example.myapplication.navigation.OperationDoneDestination
 import com.example.myapplication.ui.theme.TextColor
+import dev.enro.annotations.NavigationDestination
+import dev.enro.core.NavigationHandle
+import dev.enro.core.compose.navigationHandle
+import dev.enro.core.push
 
 @Composable
+@NavigationDestination(EditDestination::class)
 fun EditScreen() {
+    val navigation : NavigationHandle = navigationHandle<EditDestination>()
     Column(modifier = Modifier
         .fillMaxSize(),
         verticalArrangement = androidx.compose.foundation.layout.Arrangement.Top,
@@ -34,9 +41,9 @@ fun EditScreen() {
         DataInput(inputName = "Name", inputInitial = "Saving Goal")
         DataInput(inputName = "Target Amount", inputInitial = "$", modifier = Modifier.padding(top = 20.dp), isDigit = true)
         DataInput(inputName = "Current Amount", inputInitial = "$", modifier = Modifier.padding(top = 20.dp), isDigit = true)
-        CustomButton(text = "Save", modifier = Modifier.padding(top = 130.dp)) {
-
-        }
+        CustomButton(text = "Save", modifier = Modifier.padding(top = 130.dp), onClick = ({
+            navigation.push(OperationDoneDestination())
+        }))
     }
 }
 
@@ -76,9 +83,9 @@ fun DataInput(inputName: String, inputInitial:String,modifier: Modifier = Modifi
             ) },
             textStyle = androidx.compose.ui.text.TextStyle(fontSize = 24.sp),
             colors = TextFieldDefaults.textFieldColors(
-                containerColor = androidx.compose.ui.graphics.Color.White,
-                focusedIndicatorColor = androidx.compose.ui.graphics.Color.Transparent,
-                unfocusedIndicatorColor = androidx.compose.ui.graphics.Color.Transparent
+                containerColor = Color.White,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
             ),
             singleLine = true,
             keyboardOptions = if (isDigit) {
@@ -94,10 +101,10 @@ fun DataInput(inputName: String, inputInitial:String,modifier: Modifier = Modifi
 
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DataInputPreview() {
-
-    EditScreen()
-
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun DataInputPreview() {
+//
+//    EditScreen()
+//
+//}
