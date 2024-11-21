@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.myapplication.ui.operationDone
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,20 +10,26 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.myapplication.navigation.HomeDestination
-import com.example.myapplication.navigation.OperationDoneDestination
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.myapplication.TitleForEachPage
+import com.example.myapplication.ui.detail.CustomButton
+import com.example.myapplication.ui.navigation.OperationDoneDestination
 import com.example.myapplication.ui.theme.Brand100
 import dev.enro.annotations.NavigationDestination
-import dev.enro.core.compose.navigationHandle
-import dev.enro.core.push
 
 
 @Composable
 @NavigationDestination(OperationDoneDestination::class)
-fun OperationDoneScreen() {
-    val navigation = navigationHandle<OperationDoneDestination>()
+fun OperationDoneScreen(viewModel: OperationDoneScreenViewModel = viewModel<OperationDoneScreenViewModel>()) {
+    val DoneButtonClicked = viewModel::onDoneClicked
+    OperationDoneScreen(DoneButtonClicked)
+}
+
+@Composable
+private fun OperationDoneScreen(doneButtonClicked: () -> Unit) {
 
     Column(
         modifier = Modifier
@@ -42,15 +48,14 @@ fun OperationDoneScreen() {
         )
         CustomButton(text = "Back to Home",
             modifier = Modifier.padding(top = 400.dp),
-            onClick = {
-                navigation.push(HomeDestination())
-            })
+            onClick = doneButtonClicked
+        )
     }
 }
 
 
-//@Preview(showBackground = true)
-//@Composable
-//fun OperationDonePreview() {
-//    OperationDoneScreen()
-//}
+@Preview(showBackground = true)
+@Composable
+fun OperationDonePreview() {
+    OperationDoneScreen({})
+}

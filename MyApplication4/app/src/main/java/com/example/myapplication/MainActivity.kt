@@ -8,6 +8,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -34,42 +35,38 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.myapplication.navigation.HomeDestination
+import com.example.myapplication.domain.models.Goal
+import com.example.myapplication.ui.navigation.HomeDestination
 import com.example.myapplication.ui.theme.Anzx100
 import com.example.myapplication.ui.theme.Brand200
 import com.example.myapplication.ui.theme.Primary500
+import dagger.hilt.android.AndroidEntryPoint
 import dev.enro.core.compose.rememberNavigationContainer
 import dev.enro.core.container.EmptyBehavior
-import dev.enro.core.controller.NavigationApplication
-import dev.enro.core.controller.createNavigationController
 
 data class ClickableBoxData(
-    val isEdit: Boolean,
-    val text: String,
-    val targetAmount: Int = 0,
-    val currentAmount: Int = 0,
-    val onClick: () -> Unit = {}
+//    val isEdit: Boolean,
+//    val text: String,
+//    val targetAmount: Int = 0,
+//    val currentAmount: Int = 0,
+    val goal: Goal,
+    val onClick: () -> Unit = {},
+    val isEdit: Boolean = true,
 )
 
-//@NavigationComponent
-class MainActivity: ComponentActivity(), NavigationApplication {
-
-    override val navigationController = createNavigationController { }
-
+@AndroidEntryPoint
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
             val container = rememberNavigationContainer(
-                root = HomeDestination(),
-                emptyBehavior = EmptyBehavior.AllowEmpty,
+                root = HomeDestination,
+                emptyBehavior = EmptyBehavior.CloseParent,
             )
             Box(modifier = Modifier.fillMaxSize()) {
                 container.Render()
             }
-//            MyApplicationTheme {
-//                container.open(HomeScreen())
-//            }
         }
     }
 }
@@ -79,7 +76,7 @@ fun TitleForEachPage(Header: String, SubHeader: String) {
     Text(
         modifier = Modifier
             .padding(top = 60.dp),
-        text = "$Header",
+        text = Header,
         color = Brand200,
         fontSize = 40.sp,
         fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
@@ -87,14 +84,25 @@ fun TitleForEachPage(Header: String, SubHeader: String) {
     Text(
         modifier = Modifier
             .padding(top = 8.dp),
-        text = "$SubHeader",
+        text = SubHeader,
         color = Primary500,
         fontSize = 16.sp,
         fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
     )
 }
+
 @Composable
-fun ProgressCircle(targetAmount: Int, currentAmount: Int,modifier: Modifier = Modifier, fontSize: TextUnit = 30.sp, radius: Dp = 35.dp, color: Color = Anzx100, strokeWidth: Float = 60f, animDuration: Int = 1000, animDelay: Int = 0) {
+fun ProgressCircle(
+    targetAmount: Int,
+    currentAmount: Int,
+    modifier: Modifier = Modifier,
+    fontSize: TextUnit = 30.sp,
+    radius: Dp = 35.dp,
+    color: Color = Anzx100,
+    strokeWidth: Float = 60f,
+    animDuration: Int = 1000,
+    animDelay: Int = 0
+) {
     var anamationPlayed by remember { mutableStateOf(false) }
     val calculatedPercentage: Float = currentAmount.toFloat() / targetAmount.toFloat()
     val curPercentage = animateFloatAsState(
@@ -106,9 +114,10 @@ fun ProgressCircle(targetAmount: Int, currentAmount: Int,modifier: Modifier = Mo
     )
     LaunchedEffect(key1 = true) {
         anamationPlayed = true
-        
+
     }
-    Box(contentAlignment = Alignment.Center,
+    Box(
+        contentAlignment = Alignment.Center,
         modifier = modifier
             .padding(30.dp)
             .size(radius * 2)
@@ -142,6 +151,7 @@ fun ProgressCircle(targetAmount: Int, currentAmount: Int,modifier: Modifier = Mo
     }
 
 }
+
 @Composable
 fun CustomRow(boxes: List<ClickableBoxData>) {
     Row(
@@ -151,46 +161,61 @@ fun CustomRow(boxes: List<ClickableBoxData>) {
     ) {
         boxes.forEach { boxData ->
             ClickableBox(
-                isEdit = boxData.isEdit,
-                text = boxData.text,
-                targetAmount = boxData.targetAmount,
-                currentAmount = boxData.currentAmount,
+                goal = boxData.goal,
                 onClick = boxData.onClick,
+                isEdit = boxData.isEdit
             )
         }
     }
 }
+
 @Composable
-fun ClickableBox(isEdit: Boolean, text:String,targetAmount:Int = 0,currentAmount:Int = 0, modifier: Modifier = Modifier, fontSize: TextUnit = 20.sp, onClick: () -> Unit = {}) {
-    Box(modifier = Modifier
-        .padding(24.dp)
-        .shadow(
-            elevation = 4.dp,
-            shape = RoundedCornerShape(8.dp)
-        )
-        .clip(RoundedCornerShape(8.dp))
-        .border(1.dp, Color.White)
-        .background(Color.White)
-        .size(150.dp),
-        Alignment.TopCenter
+fun ClickableBox(
+    goal: Goal,
+    isEdit: Boolean,
+    modifier: Modifier = Modifier,
+    fontSize: TextUnit = 20.sp,
+    onClick: () -> Unit = {}
+) {
+    val targetAmount = goal.targetAmount
+    val currentAmount = goal.currentAmount
+    val text = goal.name
 
-    ) {
-        if(isEdit){
+    Box(
+        modifier = Modifier
+            .padding(24.dp)
+            .shadow(
+                elevation = 4.dp,
+                shape = RoundedCornerShape(8.dp),
+
+                )
+            .clip(RoundedCornerShape(8.dp))
+            .border(1.dp, Color.White)
+            .background(Color.White)
+            .size(150.dp)
+            .clickable {
+                onClick()
+            },
+        Alignment.TopCenter,
+
+        ) {
+        if (isEdit){
+            println("Start ProgressCircle-----------------1---------------print{$isEdit}")
             ProgressCircle(targetAmount = targetAmount, currentAmount = currentAmount)
-        }else{
-
+        }else {
             Text(
                 text = "+",
                 color = Color.LightGray,
                 fontSize = 80.sp,
                 modifier = Modifier.align(Alignment.Center)
             )
+
         }
         Text(
-            text = "$text",
+            text = text,
             fontSize = fontSize,
             color = Color.LightGray,
-            fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+            fontWeight = androidx.compose.ui.text.font.FontWeight.Medium,
             modifier = Modifier
                 .padding(bottom = 5.dp)
                 .align(alignment = Alignment.BottomCenter)
