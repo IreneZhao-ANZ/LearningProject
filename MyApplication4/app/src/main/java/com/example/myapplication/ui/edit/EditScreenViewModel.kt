@@ -25,13 +25,14 @@ class EditScreenViewModel @Inject constructor(
     private val upsertGoal: UpsertGoal
 ) : ViewModel() {
     val state: MutableStateFlow<Goal> = MutableStateFlow(Goal(0, "", 1, 0))
-
+    val snackbarMessage: MutableStateFlow<String?> = MutableStateFlow(null)
     private val navigationHandle by navigationHandle<EditDestination>()
+
     init {
         viewModelScope.launch {
             flowOfGoal(navigationHandle.key.id).collectLatest { goal ->
                 Log.d("IreneLog is: ", "Edie = $goal")
-                state.update {currentState ->
+                state.update { currentState ->
                     Log.d("IreneLog currentState is: ", "currentState = ${currentState}")
                     currentState.copy(
                         id = goal.id,
@@ -56,18 +57,27 @@ class EditScreenViewModel @Inject constructor(
     fun updateCurrentAmount(amount: Int) {
         state.value = state.value.copy(currentAmount = amount)
     }
+
     fun onDoneClicked() {
-        viewModelScope.launch{
-            upsertGoal(state.value)
-            println("IreneLog-EditScreenViewModel-onDoneClicked: state.value=${state.value}")
-            navigationHandle.push(
-                OperationDoneDestination()
-            )
-        }
+        if (state.value.targetAmount >= state.value.currentAmount && state.value.targetAmount > 0) {
+            viewModelScope.launch {
+                if (state.value.targetAmount >= state.value.currentAmount && state.value.targetAmount > 0) {
+
+                    upsertGoal(state.value)
+                    println("IreneLog-EditScreenViewModel-onDoneClicked: state.value=${state.value}")
+                    navigationHandle.push(
+                        OperationDoneDestination()
+                    )
+
+                }
+            }
+        }else{
+                snackbarMessage.value =
+                    "Invalid value: target amount must be greater than or equal to current amount and greater than 0"
+            }
 
 
     }
-
 
 
 }
