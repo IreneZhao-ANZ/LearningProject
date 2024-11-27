@@ -2,6 +2,7 @@ package com.example.myapplication.ui.detail
 
 //import com.example.myapplication.navigation.DetailDestination
 //import com.example.myapplication.navigation.EditDestination
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,70 +38,86 @@ import dev.enro.annotations.NavigationDestination
 @Composable
 @NavigationDestination(DetailDestination::class)
 fun DetailScreen(
-    viewModel: DetailScreenViewModel = viewModel<DetailScreenViewModel>(),
+    viewModel: DetailScreenViewModel = viewModel(),
 ) {
 
-    val state = viewModel.state.value
+    Log.d("IreneLog vmm is: ", "state = ${viewModel.state}")
+    val state by viewModel.state.collectAsState()
+    Log.d("DetailScreen state is: ", "state = $state")
     val onEditClicked = viewModel::onEditClicked
-    DetailScreen(state, onEditClicked)
+    val onDeleteClicked = viewModel::onDeleteClicked
+    DetailScreen(state, onEditClicked, onDeleteClicked)
 }
+
 @Composable
-private fun DetailScreen(goal: Goal, onEditClicked: (id: Int) -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        TitleForEachPage("Saving Goal!", "Saving for your future :)")
-        ProgressCircle(
+private fun DetailScreen(
+    goal: Goal,
+    onEditClicked: (id: Int) -> Unit,
+    onDeleteClicked: (goal: Goal) -> Unit
+) {
+    Log.d("IreneLog goal in detailScreen is: ", "state = $goal")
+    Log.d("IreneLog goal in id is: ", "state = ${goal.id}")
+    if (goal.id == 0) {
+        // Handle the default state (e.g., show a placeholder or empty state)
+        Text("No goal selected")
+    } else {
+
+        Column(
             modifier = Modifier
-                .padding(top = 30.dp),
-            targetAmount = goal.targetAmount,
-            currentAmount = goal.currentAmount,
-            radius = 70.dp,
-            strokeWidth = 90f,
-            fontSize = 50.sp
-        )
-        Text(
-            modifier = Modifier.padding(top = 20.dp),
-            text = goal.name,
-            fontSize = 30.sp,
-            color = Color.Gray,
-            fontWeight = FontWeight.Medium,
-        )
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            TitleForEachPage("Saving Goal!", "Saving for your future :)")
+            ProgressCircle(
+                modifier = Modifier
+                    .padding(top = 30.dp),
+                targetAmount = goal.targetAmount,
+                currentAmount = goal.currentAmount,
+                radius = 70.dp,
+                strokeWidth = 90f,
+                fontSize = 50.sp
+            )
+            Text(
+                modifier = Modifier.padding(top = 20.dp),
+                text = goal.name,
+                fontSize = 30.sp,
+                color = Color.Gray,
+                fontWeight = FontWeight.Medium,
+            )
 
-        Text(
-            modifier = Modifier.padding(top = 30.dp),
-            color = Color.Gray,
-            fontWeight = FontWeight.Medium,
-            text = "Target Amount: ${goal.targetAmount}",
-            fontSize = 15.sp
-        )
+            Text(
+                modifier = Modifier.padding(top = 30.dp),
+                color = Color.Gray,
+                fontWeight = FontWeight.Medium,
+                text = "Target Amount: ${goal.targetAmount}",
+                fontSize = 15.sp
+            )
 
-        Text(
-            text = "Current Amount: ${goal.currentAmount}",
-            modifier = Modifier
-                .padding(top = 20.dp),
-            color = Color.Gray,
-            fontWeight = FontWeight.Medium,
-            fontSize = 15.sp
-        )
+            Text(
+                text = "Current Amount: ${goal.currentAmount}",
+                modifier = Modifier
+                    .padding(top = 20.dp),
+                color = Color.Gray,
+                fontWeight = FontWeight.Medium,
+                fontSize = 15.sp
+            )
 
 
-        CustomButton(text = "Edit",
-            modifier = Modifier.padding(top = 80.dp),
-            onClick = { onEditClicked(goal.id) }
-        )
+            CustomButton(text = "Edit",
+                modifier = Modifier.padding(top = 80.dp),
+                onClick = { onEditClicked(goal.id) }
+            )
 
-        CustomButton(text = "Delete",
-            modifier = Modifier
-                .padding(top = 20.dp),
-            containerColor = Color.White,
-            textColor = Anzx100,
-            borderColor = Anzx100,
-            onClick = { /*TODO: delete function*/ })
+            CustomButton(text = "Delete",
+                modifier = Modifier
+                    .padding(top = 20.dp),
+                containerColor = Color.White,
+                textColor = Anzx100,
+                borderColor = Anzx100,
+                onClick = { onDeleteClicked(goal) })
+        }
     }
 }
 
@@ -147,6 +166,10 @@ fun DetailScreenPreview() {
             targetAmount = 100,
             currentAmount = 20
         )),
+        {},
         {}
     )
 }
+
+
+

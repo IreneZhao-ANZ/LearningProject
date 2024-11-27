@@ -1,7 +1,6 @@
 package com.example.myapplication.ui.edit
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.domain.FlowOfGoal
@@ -14,7 +13,9 @@ import com.example.myapplication.ui.navigation.OperationDoneDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.enro.core.push
 import dev.enro.viewmodel.navigationHandle
-import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,13 +24,23 @@ class EditScreenViewModel @Inject constructor(
     flowOfGoal: FlowOfGoal,
     private val upsertGoal: UpsertGoal
 ) : ViewModel() {
-    var state: MutableState<Goal> = mutableStateOf(Goal(0, "", 0, 0))
+    val state: MutableStateFlow<Goal> = MutableStateFlow(Goal(0, "", 1, 0))
 
     private val navigationHandle by navigationHandle<EditDestination>()
     init {
-        flowOfGoal(navigationHandle.key.id).mapLatest {
-            if (it != null) {
-                state.value = it
+        viewModelScope.launch {
+            flowOfGoal(navigationHandle.key.id).collectLatest { goal ->
+                Log.d("IreneLog is: ", "Edie = $goal")
+                state.update {currentState ->
+                    Log.d("IreneLog currentState is: ", "currentState = ${currentState}")
+                    currentState.copy(
+                        id = goal.id,
+                        name = goal.name,
+                        targetAmount = goal.targetAmount,
+                        currentAmount = goal.currentAmount
+                    )
+                }
+                Log.d("IreneLog currentState is: ", "Edit - currentState = ${state}")
             }
         }
     }

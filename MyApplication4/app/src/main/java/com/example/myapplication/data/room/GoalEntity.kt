@@ -11,7 +11,7 @@ data class GoalEntity(
     val sortType: SortType = SortType.ID,
 
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    val id: Int = 0,
 
 )
 

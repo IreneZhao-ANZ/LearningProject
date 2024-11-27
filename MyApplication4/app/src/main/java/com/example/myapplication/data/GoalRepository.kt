@@ -3,6 +3,7 @@ package com.example.myapplication.data
 import android.util.Log
 import com.example.myapplication.data.Mappers.toDomain
 import com.example.myapplication.data.room.GoalDao
+import com.example.myapplication.domain.DeleteGoal
 import com.example.myapplication.domain.FlowOfGoal
 import com.example.myapplication.domain.FlowOfGoals
 import com.example.myapplication.domain.Mappers.toDb
@@ -11,10 +12,11 @@ import com.example.myapplication.domain.models.Goal
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
+import javax.inject.Inject
 
-class GoalRepository(
+class GoalRepository @Inject constructor(
     private val goalDao: GoalDao
-) : FlowOfGoal, FlowOfGoals, UpsertGoal {
+) : FlowOfGoal, FlowOfGoals, UpsertGoal, DeleteGoal {
 
     /*fun getAllGoals() : List<Goal>
 
@@ -59,8 +61,8 @@ class GoalRepository(
             it.toDomain() }
     }
 
-    override fun flowOfGoal(id: Int): Flow<Goal?> {
-        return goalDao.getGoal(id = id).map { it?.toDomain() }
+    override fun flowOfGoal(id: Int): Flow<Goal> {
+        return goalDao.getGoal(id = id).map { it?.toDomain() ?: Goal(0, "", 0, 0) }
     }
 //    suspend fun upsetGoal(goal: Goal) {
 //        goalDao.upsertGoal(goal.toDb())
@@ -70,7 +72,12 @@ class GoalRepository(
         println("IreneLog-GoalRepository-flowOfUpsert: goal=${goal}")
         goalDao.upsertGoal(goal.toDb())
     }
+
+    override suspend fun deleteGoal(goal: Goal) {
+        goalDao.deleteGoal(goal.toDb())
+    }
 }
+
 
 
 // override fun flowOfGoal(goalId: Int) : Goal

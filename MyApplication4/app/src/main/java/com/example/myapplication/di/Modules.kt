@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.example.myapplication.data.GoalRepository
 import com.example.myapplication.data.room.GoalDao
 import com.example.myapplication.data.room.GoalDataBase
+import com.example.myapplication.domain.DeleteGoal
 import com.example.myapplication.domain.FlowOfGoal
 import com.example.myapplication.domain.FlowOfGoals
 import com.example.myapplication.domain.UpsertGoal
@@ -54,14 +55,23 @@ abstract class FlowOfGoalModule {
     abstract fun bindFlowOfGoal(goalRepository: GoalRepository): FlowOfGoal
 }
 
-// endregion
-
+/*UpsertGoal*/
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class UpsertGoalModule {
     @Binds
     abstract fun bindUpsertGoal(goalRepository: GoalRepository): UpsertGoal
 }
+/*DeleteGoal*/
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class DeleteGoalModule {
+    @Binds
+    abstract fun bindDeleteGoal(goalRepository: GoalRepository): DeleteGoal
+}
+// endregion
+
+
 // region Data
 
 /*GoalRepository*/

@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.edit
 
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +13,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,11 +35,17 @@ import dev.enro.annotations.NavigationDestination
 @Composable
 @NavigationDestination(EditDestination::class)
 fun EditScreen(viewModel: EditScreenViewModel = viewModel()) {
-    val state = viewModel.state.value
+    val state by viewModel.state.collectAsState()
+    Log.d("IreneLog-EditScreen: ", "state = $state")
     var goalName by remember { mutableStateOf(state.name) }
     var targetAmount by remember { mutableStateOf(state.targetAmount.toString()) }
     var currentAmount by remember { mutableStateOf(state.currentAmount.toString()) }
-    //EditScreen(state, viewModel::onDoneClicked)
+    LaunchedEffect(state) {
+        goalName = state.name
+        targetAmount = state.targetAmount.toString()
+        currentAmount = state.currentAmount.toString()
+    }
+
     EditScreen(
         goalName = goalName,
         targetAmount = targetAmount,
@@ -49,7 +58,7 @@ fun EditScreen(viewModel: EditScreenViewModel = viewModel()) {
             viewModel.updateTargetAmount(targetAmount.toIntOrNull() ?: 0)
             viewModel.updateCurrentAmount(currentAmount.toIntOrNull() ?: 0)
             viewModel.onDoneClicked()
-        }
+        },
     )
 
 }
@@ -62,7 +71,7 @@ private fun EditScreen(
     onGoalNameChange: (String) -> Unit,
     onTargetAmountChange: (String) -> Unit,
     onCurrentAmountChange: (String) -> Unit,
-    onSaveClick: () -> Unit
+    onSaveClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -73,7 +82,7 @@ private fun EditScreen(
         TitleForEachPage("Saving Goal!", "Saving for your future :)")
         DataInput(
             inputName = "goalName",
-            inputInitial = "Saving Goal",
+            inputInitial = goalName,
             onValueChange = onGoalNameChange
         )
         DataInput(
@@ -106,6 +115,7 @@ fun DataInput(
     onValueChange: (String) -> Unit,
 
     ) {
+    Log.d("IreneLog-DataInput: ", "inputName = $inputInitial")
     var input by remember { mutableStateOf("") }
     Column(modifier = modifier.padding(top = 20.dp)) {
         Text(
@@ -176,7 +186,7 @@ fun DataInputPreview() {
         {},
         { },
         { },
-        { }
+        { },
     )
 
 }

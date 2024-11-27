@@ -2,6 +2,7 @@ package com.example.myapplication.ui.home
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.myapplication.domain.FlowOfGoals
 import com.example.myapplication.domain.FlowOfGoals.Companion.invoke
 import com.example.myapplication.domain.models.Goal
@@ -13,7 +14,9 @@ import dev.enro.core.push
 import dev.enro.viewmodel.navigationHandle
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -23,18 +26,25 @@ class HomeScreenViewModel @Inject constructor(
 ) : ViewModel() {
     private val navigationHandle by navigationHandle<HomeDestination>()
 
-    val state =  MutableStateFlow(emptyList<Goal>())
+    val state:MutableStateFlow<List<Goal>> =  MutableStateFlow(emptyList())
 
     init {
-        flowOfGoals().mapLatest {goals->
-            Log.d("goals: ", "state = $goals")
-            state.value = goals
+        viewModelScope.launch {
+            println("IreneLog: gStart HomeScreenViewModel-----------------1---------------")
+            flowOfGoals().collectLatest { goals ->
+                Log.d("IreneLog goals: ", "state = $goals")
+                state.update { currentState ->
+                    Log.d("IreneLog currentState: ", "Home currentState = $currentState")
+                    goals
+                }
+            }
         }
     }
 
     fun onDetailClicked(
         id: Int
     ) {
+        Log.d("IreneLog goal id after clicked: ", "state = $id")
         navigationHandle.push(
             DetailDestination(
                 id

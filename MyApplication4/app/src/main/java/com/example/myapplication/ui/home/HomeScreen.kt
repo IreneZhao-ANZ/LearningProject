@@ -23,7 +23,7 @@ import dev.enro.annotations.NavigationDestination
 
 @Composable
 @NavigationDestination(HomeDestination::class)
-fun HomeScreen(viewModel: HomeScreenViewModel = viewModel<HomeScreenViewModel>()) {
+fun HomeScreen(viewModel: HomeScreenViewModel = viewModel()) {
     println("Start HomeScreen-----------------1---------------")
     val state by viewModel.state.collectAsState()
     Log.d("IreneLog-HomeScreen: ", "state = $state")
@@ -53,6 +53,7 @@ private fun HomeScreen(
             ClickableBoxData(
                 goal,
                 onClick = {
+                    Log.d("IreneLog goal id: ", "state = ${goal.id}")
                     onDetailClicked(
                         goal.id
                     )
