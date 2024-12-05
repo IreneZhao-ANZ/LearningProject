@@ -1,6 +1,5 @@
 package com.example.myapplication.ui.edit
 
-import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,7 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.myapplication.TitleForEachPage
+import com.example.myapplication.ui.composable.TitleForEachPage
 import com.example.myapplication.ui.detail.CustomButton
 import com.example.myapplication.ui.navigation.EditDestination
 import com.example.myapplication.ui.theme.TextColor
@@ -40,7 +39,6 @@ import kotlinx.coroutines.launch
 @NavigationDestination(EditDestination::class)
 fun EditScreen(viewModel: EditScreenViewModel = viewModel()) {
     val state by viewModel.state.collectAsState()
-    Log.d("IreneLog-EditScreen: ", "state = $state")
     var goalName by remember { mutableStateOf(state.name) }
     var targetAmount by remember { mutableStateOf(state.targetAmount.toString()) }
     var currentAmount by remember { mutableStateOf(state.currentAmount.toString()) }
@@ -97,7 +95,7 @@ private fun EditScreen(
         verticalArrangement = androidx.compose.foundation.layout.Arrangement.Top,
         horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
 
-    ) {
+        ) {
         TitleForEachPage("Saving Goal!", "Saving for your future :)")
         DataInput(
             inputName = "Goal Name",
@@ -118,8 +116,9 @@ private fun EditScreen(
             isDigit = true,
             onValueChange = onCurrentAmountChange
         )
-        CustomButton(text = "Save", modifier = Modifier.padding(top = 130.dp), onClick =
-        onSaveClick
+        CustomButton(
+            text = "Save", modifier = Modifier.padding(top = 130.dp), onClick =
+            onSaveClick
         )
         snackbarHost()
     }
@@ -135,7 +134,6 @@ fun DataInput(
     onValueChange: (String) -> Unit,
 
     ) {
-    Log.d("IreneLog-DataInput: ", "inputName = $inputInitial")
     var input by remember { mutableStateOf("") }
     Column(modifier = modifier.padding(top = 20.dp)) {
         Text(
@@ -151,13 +149,13 @@ fun DataInput(
                 .padding(top = 5.dp)
                 .border(
                     1.dp,
-                    androidx.compose.ui.graphics.Color.LightGray,
+                    Color.LightGray,
                     shape = RoundedCornerShape(8.dp)
                 )
                 .size(width = 320.dp, height = 60.dp),
             value = input,
             onValueChange = {
-                if (isDigit == true) {
+                if (isDigit) {
                     if (it.all { char -> char.isDigit() }) {
                         input = it
                         onValueChange(it)
@@ -195,19 +193,15 @@ fun DataInput(
 
 @Preview(showBackground = true)
 @Composable
-fun DataInputPreview() {
-
+fun EditScreenPreview() {
     EditScreen(
-
-        goalName = "Test",
-            targetAmount = "100",
-            currentAmount = "20",
-
-        {},
-        { },
-        { },
-        { },
-        { }
+        goalName = "Test Goal",
+        targetAmount = "1000",
+        currentAmount = "500",
+        onGoalNameChange = {},
+        onTargetAmountChange = {},
+        onCurrentAmountChange = {},
+        onSaveClick = {},
+        snackbarHost = {}
     )
-
 }

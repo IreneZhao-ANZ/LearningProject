@@ -25,6 +25,5 @@ interface GoalDao {
     @Query("SELECT * FROM GoalEntity WHERE id = :id")
     fun getGoal(id: Int): Flow<GoalEntity?>
 
-//    @Query("SELECT * FROM GoalRoom ORDER BY :sortType ASC")
-//    fun sortGoals(sortType: SortType)
+
 }

@@ -13,6 +13,7 @@ dependencyResolutionManagement {
         maven("https://artifactory.gcp.anz/artifactory/maven-central/")
         maven("https://artifactory.gcp.anz/artifactory/plugins-m2-gradle")
         maven("https://artifactory.gcp.anz/artifactory/anzx-apis-kotlin-maven-releases/")
+        google()
     }
 }
 

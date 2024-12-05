@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class DetailScreenViewModel @Inject constructor(
     flowOfGoal: FlowOfGoal,
@@ -33,7 +32,7 @@ class DetailScreenViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             flowOfGoal(navigationHandle.key.id).collectLatest { goal ->
-                state.update {currentState ->
+                state.update { currentState ->
                     currentState.copy(
                         id = goal.id,
                         name = goal.name,
@@ -51,21 +50,17 @@ class DetailScreenViewModel @Inject constructor(
         navigationHandle.push(
             EditDestination(id)
         )
-
     }
 
 
-    fun onDeleteClicked(goal: Goal){
+    fun onDeleteClicked(goal: Goal) {
         viewModelScope.launch {
             println("Deleting goal: $goal")
             deleteGoal(goal)
             state.value = Goal(0, "", 1, 0)
 
-            println("Navigating to OperationDoneDestination")
             navigationHandle.push(
-
                 OperationDoneDestination()
-
             )
         }
     }

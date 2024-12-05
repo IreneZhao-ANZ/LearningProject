@@ -39,7 +39,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.toString()
+
     }
+
     buildFeatures {
         compose = true
     }
@@ -57,6 +59,7 @@ kapt {
     correctErrorTypes = true
 }
 
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -69,14 +72,23 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.kotlin.ksp.gradle)
     implementation(libs.kotlin.ksp.api)
+    implementation(libs.androidx.ui.test.junit4.android)
 
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
+
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.2")
+//    androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
+    //androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    testImplementation(libs.kotlin.test)
+    testImplementation(kotlin("test-annotations-common"))
+    //androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    testImplementation("org.mockito:mockito-core:5.4.0")
+    testImplementation("org.mockito:mockito-inline:4.8.0")
 
     // region Hilt (Dependency Injection)
     implementation("com.google.dagger:hilt-android:2.52")
@@ -103,5 +115,9 @@ dependencies {
     implementation("androidx.room:room-ktx:$room_version")
     implementation("androidx.room:room-runtime:$room_version")
     kapt("androidx.room:room-compiler:$room_version")
+
+
+
+
 }
 

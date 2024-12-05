@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.myapplication.TitleForEachPage
+import com.example.myapplication.ui.composable.TitleForEachPage
 import com.example.myapplication.ui.detail.CustomButton
 import com.example.myapplication.ui.navigation.OperationDoneDestination
 import com.example.myapplication.ui.theme.Brand100
@@ -57,5 +57,5 @@ private fun OperationDoneScreen(doneButtonClicked: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun OperationDonePreview() {
-    OperationDoneScreen({})
+    OperationDoneScreen {}
 }

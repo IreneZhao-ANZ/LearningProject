@@ -1,12 +1,9 @@
-package com.example.myapplication.domain.Mappers
+package com.example.myapplication.domain.mappers
 
 import com.example.myapplication.data.room.GoalEntity
 import com.example.myapplication.data.room.SortType
 import com.example.myapplication.domain.models.Goal
 
-fun List<Goal>.toDb() = map {
-    it.toDb()
-}
 
 fun Goal.toDb() = GoalEntity(
     id = id,

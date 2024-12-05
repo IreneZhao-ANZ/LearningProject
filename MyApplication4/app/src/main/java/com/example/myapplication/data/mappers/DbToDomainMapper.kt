@@ -1,4 +1,4 @@
-package com.example.myapplication.data.Mappers
+package com.example.myapplication.data.mappers
 
 import com.example.myapplication.data.room.GoalEntity
 import com.example.myapplication.domain.models.Goal

@@ -1,8 +1,5 @@
 package com.example.myapplication.ui.detail
 
-//import com.example.myapplication.navigation.DetailDestination
-//import com.example.myapplication.navigation.EditDestination
-import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,9 +25,9 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.myapplication.ProgressCircle
-import com.example.myapplication.TitleForEachPage
 import com.example.myapplication.domain.models.Goal
+import com.example.myapplication.ui.composable.ProgressCircle
+import com.example.myapplication.ui.composable.TitleForEachPage
 import com.example.myapplication.ui.navigation.DetailDestination
 import com.example.myapplication.ui.theme.Anzx100
 import dev.enro.annotations.NavigationDestination
@@ -40,10 +37,7 @@ import dev.enro.annotations.NavigationDestination
 fun DetailScreen(
     viewModel: DetailScreenViewModel = viewModel(),
 ) {
-
-    Log.d("IreneLog vmm is: ", "state = ${viewModel.state}")
     val state by viewModel.state.collectAsState()
-    Log.d("DetailScreen state is: ", "state = $state")
     val onEditClicked = viewModel::onEditClicked
     val onDeleteClicked = viewModel::onDeleteClicked
     DetailScreen(state, onEditClicked, onDeleteClicked)
@@ -55,8 +49,6 @@ private fun DetailScreen(
     onEditClicked: (id: Int) -> Unit,
     onDeleteClicked: (goal: Goal) -> Unit
 ) {
-    Log.d("IreneLog goal in detailScreen is: ", "state = $goal")
-    Log.d("IreneLog goal in id is: ", "state = ${goal.id}")
     if (goal.id == 0) {
         // Handle the default state (e.g., show a placeholder or empty state)
         Text("No goal selected")
@@ -79,6 +71,7 @@ private fun DetailScreen(
                 strokeWidth = 90f,
                 fontSize = 50.sp
             )
+
             Text(
                 modifier = Modifier.padding(top = 20.dp),
                 text = goal.name,
@@ -103,7 +96,6 @@ private fun DetailScreen(
                 fontWeight = FontWeight.Medium,
                 fontSize = 15.sp
             )
-
 
             CustomButton(text = "Edit",
                 modifier = Modifier.padding(top = 80.dp),
@@ -155,21 +147,16 @@ fun CustomButton(
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
-fun DetailScreenPreview() {
+fun PreviewDetailScreen() {
     DetailScreen(
-        (Goal(
-            id = 0,
-            name = "Test",
-            targetAmount = 100,
-            currentAmount = 20
-        )),
-        {},
-        {}
+        goal = Goal(id = 1, name = "Sample Goal", targetAmount = 1000, currentAmount = 500),
+        onEditClicked = {},
+        onDeleteClicked = {}
     )
 }
+
 
 
 

@@ -1,6 +1,5 @@
 package com.example.myapplication.ui.edit
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.domain.FlowOfGoal
@@ -31,9 +30,7 @@ class EditScreenViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             flowOfGoal(navigationHandle.key.id).collectLatest { goal ->
-                Log.d("IreneLog is: ", "Edie = $goal")
                 state.update { currentState ->
-                    Log.d("IreneLog currentState is: ", "currentState = ${currentState}")
                     currentState.copy(
                         id = goal.id,
                         name = goal.name,
@@ -41,7 +38,6 @@ class EditScreenViewModel @Inject constructor(
                         currentAmount = goal.currentAmount
                     )
                 }
-                Log.d("IreneLog currentState is: ", "Edit - currentState = ${state}")
             }
         }
     }
@@ -62,9 +58,7 @@ class EditScreenViewModel @Inject constructor(
         if (state.value.targetAmount >= state.value.currentAmount && state.value.targetAmount > 0) {
             viewModelScope.launch {
                 if (state.value.targetAmount >= state.value.currentAmount && state.value.targetAmount > 0) {
-
                     upsertGoal(state.value)
-                    println("IreneLog-EditScreenViewModel-onDoneClicked: state.value=${state.value}")
                     navigationHandle.push(
                         OperationDoneDestination()
                     )
@@ -78,8 +72,6 @@ class EditScreenViewModel @Inject constructor(
 
 
     }
-
-
 }
 
 
