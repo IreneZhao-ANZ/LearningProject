@@ -76,8 +76,8 @@ dependencies {
 
 
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.2")
+//    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
+//    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.2")
 //    androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -86,6 +86,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     testImplementation(libs.kotlin.test)
     testImplementation(kotlin("test-annotations-common"))
+    testImplementation ("androidx.arch.core:core-testing:2.2.0")
     //androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
     testImplementation("org.mockito:mockito-core:5.4.0")
     testImplementation("org.mockito:mockito-inline:4.8.0")
@@ -107,6 +108,7 @@ dependencies {
     implementation("dev.enro:enro:2.7.0")
     ksp("dev.enro:enro-processor:2.7.0") // both kapt and ksp are supported
     testImplementation("dev.enro:enro-test:2.7.0")
+
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
 

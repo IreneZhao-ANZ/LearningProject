@@ -6,9 +6,13 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Before
+import org.junit.Test
+
+
+
+
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
@@ -20,7 +24,7 @@ internal class GoalRepositoryTest {
     private lateinit var goalDao: GoalDao
     private lateinit var goalRepository: GoalRepository
 
-    @BeforeEach
+    @Before
     fun setUp() {
         goalDao = mock(GoalDao::class.java)
         goalRepository = GoalRepository(goalDao)
@@ -36,17 +40,21 @@ internal class GoalRepositoryTest {
 
         val result = goalRepository.flowOfGoals().toList()
 
-        assertEquals(goals, result)
+        assertEquals(listOf(goals), result)
     }
 
     @Test
-    fun flowOfGoal() = runBlocking {
-        val goal = Goal(1, "Goal 1", 1000, 500)
-        `when`(goalDao.getGoal(1)).thenReturn(flowOf(goal.toDb()))
+    fun flowOfGoal() = runTest {
+        val goalOne = Goal(1, "Goal 1", 1000, 500)
+        val noGoal = Goal(0, "", 0, 0)
+        `when`(goalDao.getGoal(1)).thenReturn(flowOf(goalOne.toDb()))
+        `when`(goalDao.getGoal(3)).thenReturn(flowOf(noGoal.toDb()))
 
-        val result = goalRepository.flowOfGoal(1).toList()
+        val resultOne = goalRepository.flowOfGoal(1).toList()
+        val resultTwo = goalRepository.flowOfGoal(3).toList()
 
-        assertEquals(goal, result)
+        assertEquals(listOf(goalOne), resultOne)
+        assertEquals(listOf(noGoal), resultTwo)
     }
 
     @Test

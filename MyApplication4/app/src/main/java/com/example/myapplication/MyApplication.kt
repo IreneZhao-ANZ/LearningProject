@@ -17,10 +17,10 @@ val specificNavigationModule = createNavigationModule {
         // Configure the default animations for destinations that are pushed
         direction(
             direction = NavigationDirection.Push,
-            entering = fadeIn(animationSpec = tween(220, delayMillis = 90)),
-            exiting = fadeOut(),
-            returnEntering = fadeIn(),
-            returnExiting = fadeOut(),
+            entering = fadeIn(animationSpec = tween(100)),
+            exiting = fadeOut(animationSpec = tween(0)), // No delay
+            returnEntering = fadeIn(animationSpec = tween(0)), // No delay
+            returnExiting = fadeOut(animationSpec = tween(0)),
         )
 
     }
@@ -34,10 +34,10 @@ class MyApplication : Application(), NavigationApplication {
         animations {
             direction(
                 direction = NavigationDirection.Push,
-                entering = fadeIn(animationSpec = tween(220, delayMillis = 90)),
-                exiting = fadeOut(),
-                returnEntering = fadeIn(),
-                returnExiting = fadeOut(),
+                entering = fadeIn(animationSpec = tween(100)),
+                exiting = fadeOut(animationSpec = tween(0)), // No delay
+                returnEntering = fadeIn(animationSpec = tween(0)), // No delay
+                returnExiting = fadeOut(animationSpec = tween(0)), // No delay
             )
         }
     }

@@ -57,7 +57,7 @@ class DetailScreenViewModel @Inject constructor(
         viewModelScope.launch {
             println("Deleting goal: $goal")
             deleteGoal(goal)
-            state.value = Goal(0, "", 1, 0)
+            //state.value = Goal(0, "", 1, 0)
 
             navigationHandle.push(
                 OperationDoneDestination()

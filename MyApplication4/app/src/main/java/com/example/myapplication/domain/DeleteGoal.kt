@@ -2,7 +2,7 @@ package com.example.myapplication.domain
 
 import com.example.myapplication.domain.models.Goal
 
-interface DeleteGoal {
+fun interface DeleteGoal {
     suspend fun deleteGoal(goal: Goal)
 
     companion object {
